@@ -9,9 +9,11 @@ void main() {
   });
   test('remove-bookmark', () {
     FluentBundle bundle = FluentBundle("en-GB");
-    bundle.addMessages('''# \$title (String) - The title of the bookmark to remove.
+    bundle.addMessages(
+        '''# \$title (String) - The title of the bookmark to remove.
 remove-bookmark = Are you sure you want to remove { \$title }?''');
-    String translated = bundle.format("remove-bookmark", args: {'title': 'Google⁩'});
+    String translated =
+        bundle.format("remove-bookmark", args: {'title': 'Google⁩'});
     expect(translated, "Are you sure you want to remove Google⁩?");
   });
   test('installing', () {
@@ -23,25 +25,29 @@ installing = Installing { -brand-name }.''');
   });
   test('opening-brace', () {
     FluentBundle bundle = FluentBundle("en-GB");
-    bundle.addMessages('''opening-brace = This message features an opening curly brace: {"{"}.''');
+    bundle.addMessages(
+        '''opening-brace = This message features an opening curly brace: {"{"}.''');
     String translated = bundle.format("opening-brace");
     expect(translated, "This message features an opening curly brace: {.");
   });
   test('closing-brace', () {
     FluentBundle bundle = FluentBundle("en-GB");
-    bundle.addMessages('''closing-brace = This message features a closing curly brace: {"}"}.''');
+    bundle.addMessages(
+        '''closing-brace = This message features a closing curly brace: {"}"}.''');
     String translated = bundle.format("closing-brace");
     expect(translated, "This message features a closing curly brace: }.");
   });
   test('blank-is-removed', () {
     FluentBundle bundle = FluentBundle("en-GB");
-    bundle.addMessages('''blank-is-removed =     This message starts with no blanks.''');
+    bundle.addMessages(
+        '''blank-is-removed =     This message starts with no blanks.''');
     String translated = bundle.format("blank-is-removed");
     expect(translated, "This message starts with no blanks.");
   });
   test('blank-is-preserved', () {
     FluentBundle bundle = FluentBundle("en-GB");
-    bundle.addMessages('''blank-is-preserved = {"    "}This message starts with 4 spaces.''');
+    bundle.addMessages(
+        '''blank-is-preserved = {"    "}This message starts with 4 spaces.''');
     String translated = bundle.format("blank-is-preserved");
     expect(translated, "    This message starts with 4 spaces.");
   });
@@ -76,7 +82,8 @@ at the beginning of the third line:
     .attr = An actual attribute (not part of the text value above)
 ''');
     String translated = bundle.format("attribute-how-to", attribute: "attr");
-    expect(translated, '''An actual attribute (not part of the text value above)''');
+    expect(translated,
+        '''An actual attribute (not part of the text value above)''');
   });
   test('literal-quote1', () {
     FluentBundle bundle = FluentBundle("en-GB");
@@ -87,7 +94,8 @@ literal-quote1 = Text in {"\\""}double quotes{"\\""}.''');
   });
   test('literal-quote2', () {
     FluentBundle bundle = FluentBundle("en-GB");
-    bundle.addMessages('''# This is preferred. Just use the actual double quote character.
+    bundle.addMessages(
+        '''# This is preferred. Just use the actual double quote character.
 literal-quote2 = Text in "double quotes".''');
     String translated = bundle.format("literal-quote2");
     expect(translated, '''Text in "double quotes".''');
@@ -100,7 +108,8 @@ literal-quote2 = Text in "double quotes".''');
   });
   test('which-dash1', () {
     FluentBundle bundle = FluentBundle("en-GB");
-    bundle.addMessages('''# The dash character is an EM DASH but depending on the font face,
+    bundle.addMessages(
+        '''# The dash character is an EM DASH but depending on the font face,
 # it might look like an EN DASH.
 which-dash1 = It's a dash—or is it?''');
     String translated = bundle.format("which-dash1");
@@ -108,14 +117,16 @@ which-dash1 = It's a dash—or is it?''');
   });
   test('which-dash2', () {
     FluentBundle bundle = FluentBundle("en-GB");
-    bundle.addMessages('''# Using a Unicode escape sequence makes the intent clear.
+    bundle.addMessages(
+        '''# Using a Unicode escape sequence makes the intent clear.
 which-dash2 = It's a dash{"\\u2014"}or is it?''');
     String translated = bundle.format("which-dash2");
     expect(translated, '''It's a dash\u2014or is it?''');
   });
   test('tears-of-joy1', () {
     FluentBundle bundle = FluentBundle("en-GB");
-    bundle.addMessages('''# This will work fine, but the codepoint can be considered
+    bundle.addMessages(
+        '''# This will work fine, but the codepoint can be considered
 # cryptic by other translators.
 tears-of-joy1 = {"\\U01F602"}''');
     String translated = bundle.format("tears-of-joy1");
@@ -123,7 +134,8 @@ tears-of-joy1 = {"\\U01F602"}''');
   });
   test('tears-of-joy2', () {
     FluentBundle bundle = FluentBundle("en-GB");
-    bundle.addMessages('''# This is preferred. You can instantly see what the Unicode
+    bundle.addMessages(
+        '''# This is preferred. You can instantly see what the Unicode
 # character used here is.
 tears-of-joy2 = 😂''');
     String translated = bundle.format("tears-of-joy2");
@@ -159,7 +171,8 @@ be indented by at least one space.''');
   });
   test('leading-spaces', () {
     FluentBundle bundle = FluentBundle("en-GB");
-    bundle.addMessages('''leading-spaces =     This message's value starts with the word "This".''');
+    bundle.addMessages(
+        '''leading-spaces =     This message's value starts with the word "This".''');
     String translated = bundle.format("leading-spaces");
     expect(translated, '''This message's value starts with the word "This".''');
   });
@@ -244,8 +257,10 @@ on the second line of its value.''');
   });
   test('unread-emails', () {
     FluentBundle bundle = FluentBundle("en-GB");
-    bundle.addMessages('''unread-emails = { \$user } has { \$email-count } unread emails.''');
-    String translated = bundle.format("unread-emails", args: {'user': "Ryan", 'email-count': 4});
+    bundle.addMessages(
+        '''unread-emails = { \$user } has { \$email-count } unread emails.''');
+    String translated = bundle
+        .format("unread-emails", args: {'user': "Ryan", 'email-count': 4});
     expect(translated, '''Ryan has 4 unread emails.''');
   });
   test('time-elapsed', () {
@@ -256,7 +271,8 @@ on the second line of its value.''');
   });
   test('time-elapsed2', () {
     FluentBundle bundle = FluentBundle("en-GB");
-    bundle.addMessages('''time-elapsed2 = Time elapsed: { NUMBER(\$duration, maximumFractionDigits: 0) }s.''');
+    bundle.addMessages(
+        '''time-elapsed2 = Time elapsed: { NUMBER(\$duration, maximumFractionDigits: 0) }s.''');
     String translated = bundle.format("time-elapsed2", args: {'duration': 4.3});
     expect(translated, '''Time elapsed: 4s.''');
   });
@@ -302,10 +318,11 @@ help-menu-save = Click { menu-save } to save the file.''');
         [female] her stream
        *[other] their stream
     }.''');
-    String translated =
-        bundle.format("shared-photos", args: {'userName': "Anne", 'userGender': "female", "photoCount": 3});
+    String translated = bundle.format("shared-photos",
+        args: {'userName': "Anne", 'userGender': "female", "photoCount": 3});
     expect(translated, '''Anne added 3 new photos to her stream.''');
-    translated = bundle.format("shared-photos", args: {'userName': "Tom", 'userGender': "male", "photoCount": 1});
+    translated = bundle.format("shared-photos",
+        args: {'userName': "Tom", 'userGender': "male", "photoCount": 1});
     expect(translated, '''Tom added a new photo to his stream.''');
   });
 }

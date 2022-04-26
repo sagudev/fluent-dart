@@ -18,7 +18,7 @@ const PDI = "\u2069";
 // Resolve a pattern (a complex string with placeables).
 FluentValue resolvePattern(Scope scope, Pattern pattern) {
   if (scope.dirty.contains(pattern)) {
-    scope.reportError(new RangeError("Cyclic reference"));
+    scope.reportError(RangeError("Cyclic reference"));
     return FluentNone();
   }
 
@@ -47,7 +47,8 @@ FluentValue resolvePattern(Scope scope, Pattern pattern) {
       // on this pattern. The length check protects against excessive memory
       // usage, and throwing protects against eating up the CPU when long
       // placeables are deeply nested.
-      throw RangeError("Too many placeables expanded: ${scope.placeables}, max allowed is $MAX_PLACEABLES");
+      throw RangeError(
+          "Too many placeables expanded: ${scope.placeables}, max allowed is $MAX_PLACEABLES");
     }
 
     if (useIsolating) {
@@ -69,7 +70,8 @@ FluentValue resolveExpression(Scope scope, Expression expr) {
   if (expr is StringLiteral) {
     return FluentString(expr.value);
   } else if (expr is NumberLiteral) {
-    return FluentNumber(expr.value, locale: scope.bundle.locale, minimumFractionDigits: expr.precision);
+    return FluentNumber(expr.value,
+        locale: scope.bundle.locale, minimumFractionDigits: expr.precision);
   } else if (expr is VariableReference) {
     return resolveVariableReference(scope, expr);
   } else if (expr is MessageReference) {
@@ -120,7 +122,8 @@ FluentValue resolveVariableReference(Scope scope, VariableReference reference) {
   } else if (arg is DateTime) {
     return FluentDateTime(arg, locale: scope.bundle.locale);
   } else {
-    scope.reportError(UnsupportedError("Variable type not supported: ${reference.name}, ${arg.runtimeType}"));
+    scope.reportError(UnsupportedError(
+        "Variable type not supported: ${reference.name}, ${arg.runtimeType}"));
     return FluentNone("\$${reference.name}");
   }
 }
@@ -257,16 +260,21 @@ bool match(Scope scope, FluentValue selector, FluentValue key) {
     return true;
   }
   // XXX Consider comparing options too, e.g. minimumFractionDigits.
-  if (key is FluentNumber && selector is FluentNumber && key.value == selector.value) {
+  if (key is FluentNumber &&
+      selector is FluentNumber &&
+      key.value == selector.value) {
     return true;
   }
 
-  if (key is FluentString && selector is FluentString && key.value == selector.value) {
+  if (key is FluentString &&
+      selector is FluentString &&
+      key.value == selector.value) {
     return true;
   }
 
   if (selector is FluentNumber && key is FluentString) {
-    plural_rules.PluralRule? pluralRule = _pluralRule(scope.bundle.locale, selector.value);
+    plural_rules.PluralRule? pluralRule =
+        _pluralRule(scope.bundle.locale, selector.value);
     plural_rules.PluralCase pluralCase = pluralRule!(); //null-safety !
     String category = pluralCase.toString().split('.').last.toLowerCase();
     if (key.value.toLowerCase() == category) {
@@ -291,9 +299,12 @@ FluentValue getDefault(Scope scope, List<Variant> variants) {
 plural_rules.PluralRule? _cachedPluralRule;
 String? _cachedPluralLocale;
 
-plural_rules.PluralRule? _pluralRule(String locale, num howMany, [int? precision]) {
+plural_rules.PluralRule? _pluralRule(String locale, num howMany,
+    [int? precision]) {
   plural_rules.startRuleEvaluation(howMany, precision);
-  var verifiedLocale = Intl.verifiedLocale(locale, plural_rules.localeHasPluralRules, onFailure: (locale) => 'default');
+  var verifiedLocale = Intl.verifiedLocale(
+      locale, plural_rules.localeHasPluralRules,
+      onFailure: (locale) => 'default');
   if (_cachedPluralLocale == verifiedLocale) {
     return _cachedPluralRule;
   } else {

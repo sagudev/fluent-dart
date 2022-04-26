@@ -12,7 +12,8 @@ class FluentValue<T> {
 
   // Format this instance of `FluentValue` to a string.
   String toString() {
-    throw UnimplementedError("Subclasses of FluentValue must implement toString().");
+    throw UnimplementedError(
+        "Subclasses of FluentValue must implement toString().");
   }
 }
 
@@ -71,7 +72,8 @@ class FluentNumber extends FluentValue<num> {
         nf = NumberFormat.decimalPattern(locale);
         break;
       case "currency":
-        nf = NumberFormat.currency(locale: locale, name: currency, symbol: currency);
+        nf = NumberFormat.currency(
+            locale: locale, name: currency, symbol: currency);
         break;
       case "percent":
         nf = NumberFormat.percentPattern(locale);
@@ -85,8 +87,10 @@ class FluentNumber extends FluentValue<num> {
       nf.turnOffGrouping();
     }
     nf.minimumIntegerDigits = minimumIntegerDigits ?? nf.minimumIntegerDigits;
-    nf.minimumFractionDigits = minimumFractionDigits ?? nf.minimumFractionDigits;
-    nf.maximumFractionDigits = maximumFractionDigits ?? nf.maximumFractionDigits;
+    nf.minimumFractionDigits =
+        minimumFractionDigits ?? nf.minimumFractionDigits;
+    nf.maximumFractionDigits =
+        maximumFractionDigits ?? nf.maximumFractionDigits;
 
     return nf.format(value);
   }

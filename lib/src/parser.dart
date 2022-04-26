@@ -7,7 +7,8 @@ import 'error.dart';
 class FluentParser {
   // This regex is used to iterate through the beginnings of messages and terms.
   // With the multiLine flag, the ^ matches at the beginning of every line.
-  final reMessageStart = RegExp(r"^(-?[a-zA-Z][\w-]*) *= *", multiLine: true, dotAll: true);
+  final reMessageStart =
+      RegExp(r"^(-?[a-zA-Z][\w-]*) *= *", multiLine: true, dotAll: true);
   // Both Attributes and Variants are parsed in while loops. These regexes are
   // used to break out of them.
   final reAttributeStart = RegExp(
@@ -153,7 +154,8 @@ class FluentParser {
     // If there's a placeable on the first line, parse a complex pattern.
     if (currentChar() == "{" || currentChar() == "}") {
       // Re-use the text parsed above, if possible.
-      return parsePatternElements(first != null ? [TextElement(first)] : [], 65536);
+      return parsePatternElements(
+          first != null ? [TextElement(first)] : [], 65536);
     }
     // RE_TEXT_VALUE stops at newlines. Only continue parsing the pattern if
     // what comes after the newline is indented.
@@ -162,7 +164,8 @@ class FluentParser {
       if (first != null) {
         // If there's text on the first line, the blank block is part of the
         // translation content in its entirety.
-        return parsePatternElements([TextElement(first), indent], indent.length);
+        return parsePatternElements(
+            [TextElement(first), indent], indent.length);
       }
       // Otherwise, we're dealing with a block pattern, i.e. a pattern which
       // starts on a new line. Discrad the leading newlines but keep the
@@ -177,7 +180,8 @@ class FluentParser {
     return null;
   }
 
-  Pattern parsePatternElements(List<PatternElement> elements, int commonIndent) {
+  Pattern parsePatternElements(
+      List<PatternElement> elements, int commonIndent) {
     while (true) {
       if (test(reTextRun)) {
         String? text = match1(reTextRun); // null-safety !
@@ -213,7 +217,8 @@ class FluentParser {
     for (var element in elements) {
       if (element is Indent) {
         // Dedent indented lines by the maximum common indent.
-        element.value = element.value.substring(0, element.value.length - commonIndent);
+        element.value =
+            element.value.substring(0, element.value.length - commonIndent);
         if (element.value.length > 0) {
           baked.add(element);
         }
@@ -362,7 +367,8 @@ class FluentParser {
     String value = m.group(1)!; // null-safety !
     String fraction = m.group(2) ?? "";
     int precision = fraction.length;
-    return NumberLiteral(precision == 0 ? int.parse(value) : double.parse(value), precision);
+    return NumberLiteral(
+        precision == 0 ? int.parse(value) : double.parse(value), precision);
   }
 
   StringLiteral parseStringLiteral() {
@@ -396,7 +402,8 @@ class FluentParser {
       String? codepoint4 = m.group(1);
       String? codepoint6 = m.group(2);
 
-      int codepoint = int.parse(codepoint4 ?? codepoint6 ?? '', radix: 16); //debug: can this '' cause issues ?
+      int codepoint = int.parse(codepoint4 ?? codepoint6 ?? '',
+          radix: 16); //debug: can this '' cause issues ?
 
       return codepoint <= 0xd7ff || 0xe000 <= codepoint
           // It's a Unicode scalar value.
