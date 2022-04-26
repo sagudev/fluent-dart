@@ -5,15 +5,15 @@ class Scope {
   // The bundle for which the given resolution is happening.
   final FluentBundle bundle;
   // The list of errors collected while resolving.
-  final List<Error> errors;
+  final List<Error>? errors;
   // A dict of developer-provided variables.
   final Map<String, dynamic> args;
 
   /// The Set of patterns already encountered during this resolution.
   /// Used to detect and prevent cyclic resolutions.
-  Set<Pattern> dirty = Set<Pattern>();
+  Set<Pattern?> dirty = Set<Pattern?>();
   // A dict of parameters passed to a TermReference.
-  Map<Symbol, dynamic> params;
+  Map<Symbol, dynamic>? params;
 
   /// The running count of placeables resolved so far. Used to detect the
   /// Billion Laughs and Quadratic Blowup attacks.
@@ -25,7 +25,7 @@ class Scope {
     if (this.errors == null) {
       throw error;
     } else {
-      this.errors.add(error);
+      this.errors!.add(error);
     }
   }
 }

@@ -18,8 +18,8 @@ class FluentValue<T> {
 }
 
 /// A `FluentValue` representing no correct value.
-class FluentNone extends FluentValue<String> {
-  FluentNone([String value = "???"]) : super(value);
+class FluentNone extends FluentValue<String?> {
+  FluentNone([String? value = "???"]) : super(value);
 
   // Format this `FluentNone` to the fallback string.
   String toString() {
@@ -28,8 +28,8 @@ class FluentNone extends FluentValue<String> {
 }
 
 /// A `FluentValue` representing string value.
-class FluentString extends FluentValue<String> {
-  FluentString(String value) : super(value);
+class FluentString extends FluentValue<String?> {
+  FluentString(String? value) : super(value);
 
   // Format this `FluentString` to string.
   String toString() {
@@ -39,14 +39,14 @@ class FluentString extends FluentValue<String> {
 
 /// A `FluentValue` representing a number.
 class FluentNumber extends FluentValue<num> {
-  final String locale;
-  final String style;
-  final String currency;
+  final String? locale;
+  final String? style;
+  final String? currency;
   // final  String currencyDisplay;
-  final bool useGrouping;
-  final int minimumIntegerDigits;
-  final int minimumFractionDigits;
-  final int maximumFractionDigits;
+  final bool? useGrouping;
+  final int? minimumIntegerDigits;
+  final int? minimumFractionDigits;
+  final int? maximumFractionDigits;
   // final int minimumSignificantDigits;
   // final int maximumSignificantDigits;
 
@@ -98,21 +98,21 @@ class FluentNumber extends FluentValue<num> {
 
 /// A `FluentType` representing a date and time.
 class FluentDateTime extends FluentValue<DateTime> {
-  String locale;
-  String pattern;
-  String calendar;
-  String numberingSystem;
-  String timeZone;
-  bool hour12;
-  String weekday;
-  String era;
-  String year;
-  String month;
-  String day;
-  String hour;
-  String minute;
-  String second;
-  String timeZoneName;
+  String? locale;
+  String? pattern;
+  String? calendar;
+  String? numberingSystem;
+  String? timeZone;
+  bool? hour12;
+  String? weekday;
+  String? era;
+  String? year;
+  String? month;
+  String? day;
+  String? hour;
+  String? minute;
+  String? second;
+  String? timeZoneName;
   FluentDateTime(
     DateTime value, {
     this.locale,

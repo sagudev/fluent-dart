@@ -106,7 +106,7 @@ class FluentParser {
     // comments and recover from errors.
     Resource resource = Resource();
     for (RegExpMatch match in reMessageStart.allMatches(source)) {
-      String id = match.group(1);
+      String? id = match.group(1);
       cursor = match.end;
       try {
         resource.body.add(parseMessage(id));
@@ -122,7 +122,7 @@ class FluentParser {
     return resource;
   }
 
-  Message parseMessage(String id) {
+  Message parseMessage(String? id) {
     final value = parsePattern();
     final attributes = parseAttributes();
     if (value == null && attributes.length == 0) {
@@ -131,11 +131,11 @@ class FluentParser {
     return Message(id, value, attributes);
   }
 
-  Map<String, Pattern> parseAttributes() {
-    Map<String, Pattern> attrs = {};
+  Map<String?, Pattern> parseAttributes() {
+    Map<String?, Pattern> attrs = {};
     while (test(reAttributeStart)) {
-      String name = match1(reAttributeStart);
-      Pattern value = parsePattern();
+      String? name = match1(reAttributeStart);
+      Pattern? value = parsePattern();
       if (value == null) {
         throw SyntaxError("Expected attribute value");
       }
@@ -144,8 +144,8 @@ class FluentParser {
     return attrs;
   }
 
-  Pattern parsePattern() {
-    String first;
+  Pattern? parsePattern() {
+    String? first;
     // First try to parse any simple text on the same line as the id.
     if (test(reTextRun)) {
       first = match1(reTextRun);
@@ -159,7 +159,7 @@ class FluentParser {
     }
     // RE_TEXT_VALUE stops at newlines. Only continue parsing the pattern if
     // what comes after the newline is indented.
-    Indent indent = parseIndent();
+    Indent? indent = parseIndent();
     if (indent != null) {
       if (first != null) {
         // If there's text on the first line, the blank block is part of the
@@ -184,7 +184,7 @@ class FluentParser {
       List<PatternElement> elements, int commonIndent) {
     while (true) {
       if (test(reTextRun)) {
-        String text = match1(reTextRun);
+        String? text = match1(reTextRun);
         elements.add(TextElement(text));
         continue;
       }
@@ -210,7 +210,7 @@ class FluentParser {
     final lastElement = elements.last;
     // Trim the trailing spaces in the last element if it's a TextElement.
     if (lastElement is TextElement) {
-      lastElement.value = trim(lastElement.value, reTrailingSpaces);
+      lastElement.value = trim(lastElement.value!, reTrailingSpaces);
     }
 
     List<PatternElement> baked = [];
@@ -252,9 +252,9 @@ class FluentParser {
 
     if (test(reReference)) {
       Match m = match(reReference);
-      String sigil = m.group(1);
-      String name = m.group(2);
-      String attr = m.group(3);
+      String? sigil = m.group(1);
+      String? name = m.group(2);
+      String? attr = m.group(3);
       if (sigil == "\$") {
         return VariableReference(name);
       }
@@ -266,7 +266,7 @@ class FluentParser {
           // A parameterized term: -term(...).
           return TermReference("-$name", attr, args);
         }
-        if (reFunctionName.hasMatch(name)) {
+        if (reFunctionName.hasMatch(name!)) {
           return FunctionReference(name, args);
         }
 
@@ -343,7 +343,7 @@ class FluentParser {
     if (test(reNumberLiteral)) {
       key = parseNumberLiteral();
     } else {
-      String value = match1(reIdentifier);
+      String? value = match1(reIdentifier);
       key = StringLiteral(value);
     }
     consumeToken(tokenBracketClose, true);
@@ -364,18 +364,18 @@ class FluentParser {
 
   NumberLiteral parseNumberLiteral() {
     Match m = match(reNumberLiteral);
-    String value = m.group(1);
+    String? value = m.group(1);
     String fraction = m.group(2) ?? "";
     int precision = fraction.length;
     return NumberLiteral(
-        precision == 0 ? int.parse(value) : double.parse(value), precision);
+        precision == 0 ? int.parse(value!) : double.parse(value!), precision);
   }
 
   StringLiteral parseStringLiteral() {
     consumeChar('"', true);
     StringBuffer sb = StringBuffer();
     while (true) {
-      String value = match1(reStringRun);
+      String? value = match1(reStringRun);
       sb.write(value);
 
       if (currentChar() == null) {
@@ -392,16 +392,16 @@ class FluentParser {
     }
   }
 
-  String parseEscapeSequence() {
+  String? parseEscapeSequence() {
     if (test(reStringEscape)) {
       return match1(reStringEscape);
     }
 
     if (test(reUnicodeEscape)) {
       Match m = match(reUnicodeEscape);
-      String codepoint4 = m.group(1);
-      String codepoint6 = m.group(2);
-      int codepoint = int.parse(codepoint4 ?? codepoint6, radix: 16);
+      String? codepoint4 = m.group(1);
+      String? codepoint6 = m.group(2);
+      int codepoint = int.parse(codepoint4 ?? codepoint6!, radix: 16);
       return codepoint <= 0xd7ff || 0xe000 <= codepoint
           // It's a Unicode scalar value.
           ? String.fromCharCode(codepoint)
@@ -415,7 +415,7 @@ class FluentParser {
 
   // Parse blank space. Return it if it looks like indent before a pattern
   // line. Skip it othwerwise.
-  Indent parseIndent() {
+  Indent? parseIndent() {
     int start = cursor;
     consumeToken(tokenBlank);
 
@@ -453,7 +453,7 @@ class FluentParser {
   // Normalize a blank block and extract the indent details.
   Indent makeIndent(String blank) {
     String value = blank.replaceAll(reBlankLines, "\n");
-    int length = reIndent.firstMatch(blank).group(1).length;
+    int length = reIndent.firstMatch(blank)!.group(1)!.length;
     return Indent(value, length);
   }
 
@@ -467,7 +467,7 @@ class FluentParser {
   }
 
   Match match(RegExp re) {
-    Match result = re.matchAsPrefix(source, cursor);
+    Match? result = re.matchAsPrefix(source, cursor);
     if (result == null) {
       throw SyntaxError("Expected $re");
     }
@@ -475,7 +475,7 @@ class FluentParser {
     return result;
   }
 
-  String match1(RegExp re) {
+  String? match1(RegExp re) {
     return match(re).group(1);
   }
 
@@ -495,7 +495,7 @@ class FluentParser {
   // Advance the cursor by the token if it matches. May be used as a predicate
   // (was the match found?) or, if errorClass is passed, as an assertion.
   bool consumeToken(RegExp re, [bool raiseError = false]) {
-    Match result = re.matchAsPrefix(source, cursor);
+    Match? result = re.matchAsPrefix(source, cursor);
     if (result != null) {
       cursor = result.end;
       return true;
@@ -506,7 +506,7 @@ class FluentParser {
     return false;
   }
 
-  String currentChar() {
+  String? currentChar() {
     if (cursor >= source.length) {
       return null;
     } else {

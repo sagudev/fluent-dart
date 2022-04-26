@@ -7,7 +7,7 @@ import 'builtin.dart';
 import 'scope.dart';
 import 'resolver.dart';
 
-typedef String TextTransform(String text);
+typedef String TextTransform(String? text);
 String identity(String s) => s;
 
 /// Message bundles are single-language stores of translation resources. They are
@@ -17,7 +17,7 @@ class FluentBundle {
   final bool useIsolating;
   final TextTransform transform;
 
-  final Map<String, Message> messages = {};
+  final Map<String?, Message> messages = {};
   final Map<String, Function> functions = {
     'NUMBER': NUMBER,
     'DATETIME': DATETIME,
@@ -39,13 +39,13 @@ class FluentBundle {
     return this.messages.containsKey(id);
   }
 
-  String format(String id,
-      {Map<String, dynamic> args = const {}, List<Error> errors, String attribute}) {
-    Message message = this.messages[id];
+  String? format(String id,
+      {Map<String, dynamic> args = const {}, List<Error>? errors, String? attribute}) {
+    Message? message = this.messages[id];
     if (message == null) {
       return null;
     }
-    Pattern pattern = attribute == null ? message.value : message.attributes[attribute];
+    Pattern? pattern = attribute == null ? message.value : message.attributes[attribute];
     if (pattern == null) {
       return null;
     }
